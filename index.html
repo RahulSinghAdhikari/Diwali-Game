@@ -677,10 +677,58 @@
   </div>
 </div>
 
+<div class="boot-error" id="boot-error" role="alert" hidden>
+  <div class="boot-error__card">
+    <svg class="boot-error__ic" viewBox="0 0 48 48" aria-hidden="true"><use href="#i-diya"/></svg>
+    <h2 class="boot-error__title" id="boot-error-title">The festival could not start</h2>
+    <pre class="boot-error__detail" id="boot-error-detail"></pre>
+    <button class="btn btn--primary" type="button" onclick="location.reload()">RELOAD</button>
+  </div>
+</div>
+
 <noscript>
   <div style="padding:2rem;color:#FFF8EC;font-family:system-ui,sans-serif">Diwali Dhamaka needs JavaScript enabled to run. Please turn it on and reload.</div>
 </noscript>
 
+<!-- Boot watchdog: a classic script, so it still runs if the module graph fails.
+     Turns a silent black screen into something the player can act on. -->
+<script>
+(function () {
+  var reported = false;
+
+  function show(title, detail) {
+    if (reported) return;
+    reported = true;
+    var box = document.getElementById('boot-error');
+    if (!box) return;
+    document.getElementById('boot-error-title').textContent = title;
+    document.getElementById('boot-error-detail').textContent = detail || '';
+    box.hidden = false;
+  }
+
+  window.addEventListener('error', function (e) {
+    var msg = e.message || 'Script error';
+    if (e.filename) msg += '\n' + String(e.filename).replace(location.origin, '') +
+      (e.lineno ? ':' + e.lineno : '');
+    show('The festival could not start', msg);
+  });
+
+  window.addEventListener('unhandledrejection', function (e) {
+    var r = e.reason;
+    show('The festival could not start', (r && (r.stack || r.message)) || String(r));
+  });
+
+  // If the game has not announced itself in 8s, something is wrong.
+  setTimeout(function () {
+    if (!window.DiwaliDhamaka) {
+      show('Still loading…',
+        'The game scripts did not finish starting. This usually means the page was ' +
+        'opened directly from disk (file://) instead of over http://, or a module ' +
+        'failed to download. Reload, or serve the folder with: npm start');
+    }
+  }, 8000);
+})();
+</script>
 <script type="module" src="js/app.js"></script>
 </body>
 </html>

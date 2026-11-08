@@ -66,11 +66,22 @@ async function playRangoli(ctx) {
 async function playFireworks(ctx) {
   const { api, window } = ctx;
   let guard = 0;
-  while (stage(api) && stage(api).rockets && guard++ < 120) {
-    for (const r of stage(api).rockets) {
-      if (r.variant !== 'dud') tapStage(window, r.x, r.y);
+  while (stage(api) && stage(api).rockets && guard++ < 140) {
+    const rockets = stage(api).rockets;
+    // The stage resolves a tap to the TOPMOST rocket under the point (it scans
+    // the array backwards). A careful player therefore never aims at a good
+    // rocket that has a dud drawn over it.
+    for (let i = rockets.length - 1; i >= 0; i--) {
+      const r = rockets[i];
+      if (r.variant === 'dud') continue;
+      const covered = rockets.slice(i + 1).some((o) => {
+        if (o.variant !== 'dud') return false;
+        const rr = Math.max(o.size * 0.46, 32);
+        return (o.x - r.x) ** 2 + (o.y - r.y) ** 2 <= rr * rr;
+      });
+      if (!covered) tapStage(window, r.x, r.y);
     }
-    await advance(200, STEP);
+    await advance(150, STEP);
   }
 }
 
