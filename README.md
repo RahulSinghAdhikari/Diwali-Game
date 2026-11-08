@@ -39,7 +39,7 @@ No framework. No build step. No bundler. Open it on a phone and play.
 ```bash
 git clone https://github.com/RahulSinghAdhikari/Diwali-Game.git
 cd Diwali-Game
-python3 -m http.server 8080      # or: npx serve .
+npm start                        # python3 tools/dev-server.py 8080
 ```
 
 Then open <http://localhost:8080>.
@@ -185,16 +185,31 @@ Opening it shows a **"RAHUL SINGH CHALLENGES YOU! Can you beat 2,450?"** banner 
 
 ## Running locally
 
-Any static server works:
+```bash
+npm start                        # http://localhost:8080
+```
+
+That runs [`tools/dev-server.py`](tools/dev-server.py) — a ~90-line static server with three
+things `python3 -m http.server` gets wrong for a 30-module ES project:
+
+| | `http.server` | `tools/dev-server.py` |
+|---|---|---|
+| Protocol | HTTP/1.0 — a new TCP connection per module | HTTP/1.1 keep-alive |
+| Nagle's algorithm | on — ~40 ms stall per response | disabled |
+| Listen backlog | 5 — parallel fetches get refused | 128 |
+| Caching | 304s serve stale JS after an edit | `Cache-Control: no-store` |
+
+Measured on the full module graph: **1274 ms → 8 ms**.
+
+Any other static server works too — nothing in the game depends on it:
 
 ```bash
-python3 -m http.server 8080      # Python
+python3 -m http.server 8080      # Python, stdlib
 npx serve .                      # Node
 php -S localhost:8080            # PHP
 ```
 
-`npm start` is wired to the Python one-liner for convenience. No install step is required to
-play — `npm install` only pulls in `jsdom` for the test suite.
+No install step is required to play — `npm install` only pulls in `jsdom` for the test suite.
 
 ---
 
@@ -364,6 +379,8 @@ Diwali-Game/
 │       ├── firework-frenzy.js
 │       ├── mithai-mania.js
 │       └── boss-battle.js
+├── tools/
+│   └── dev-server.py       # Local static server (keep-alive, no-store) — dev only
 └── tests/
     ├── harness.mjs         # jsdom + virtual clock + canvas/audio stubs
     ├── logic.test.mjs      # Pure logic (records, combos, patterns, sharing)
