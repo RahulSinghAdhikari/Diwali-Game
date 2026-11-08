@@ -231,10 +231,16 @@ The game is a static site at the repository root. Everything below works out of 
 ### GitHub Pages
 
 1. **Settings → Pages → Build and deployment → Source: Deploy from a branch**
-2. Branch `main`, folder `/ (root)` → **Save**
+2. Pick the branch holding the game, folder `/ (root)` → **Save**
 3. The game is live at `https://<user>.github.io/<repo>/` within a minute.
 
-No `publicUrl` configuration needed: share links pick up the Pages URL automatically.
+No `publicUrl` configuration needed: share links pick up the Pages URL automatically,
+and `.nojekyll` keeps Pages from reprocessing the files.
+
+Prefer deploying from Actions instead? Set **Source: GitHub Actions** and run the
+*Deploy Diwali Dhamaka to GitHub Pages* workflow — it runs the full test suite first and
+publishes only if it passes. (It is manual-dispatch only, so it never fights with the
+branch-based source.)
 
 ### Netlify / Vercel / Cloudflare Pages
 
