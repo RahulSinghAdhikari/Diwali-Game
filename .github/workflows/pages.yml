@@ -30,7 +30,11 @@ jobs:
       - name: Run the full test suite
         run: npm test
 
+  # Only needed if Pages is set to the "GitHub Actions" source. With the
+  # simpler "Deploy from a branch" source GitHub publishes automatically and
+  # this job is unnecessary, so it never runs on a plain push.
   deploy:
+    if: github.event_name == 'workflow_dispatch'
     needs: test
     runs-on: ubuntu-latest
     environment:
