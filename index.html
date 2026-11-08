@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Diwali Dhamaka — The Festival Quest</title>
+<meta name="description" content="Restore the Lights. Unlock the Magic. Become the Diwali Champion! A festive 5-stage arcade quest you can play right in your browser." />
+<meta name="theme-color" content="#170D2B" />
+<meta name="color-scheme" content="dark" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes" />
+
+<meta property="og:title" content="Diwali Dhamaka — The Festival Quest" />
+<meta property="og:description" content="Restore the Lights. Unlock the Magic. Become the Diwali Champion!" />
+<meta property="og:type" content="website" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='g'%3E%3Cstop offset='0' stop-color='%23FFF3C4'/%3E%3Cstop offset='1' stop-color='%23F97316'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23170D2B'/%3E%3Cellipse cx='32' cy='44' rx='18' ry='8' fill='%23C2663E'/%3E%3Cpath d='M32 14c6 7 9 11 9 16a9 9 0 0 1-18 0c0-5 3-9 9-16z' fill='url(%23g)'/%3E%3C/svg%3E" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="css/base.css" />
+<link rel="stylesheet" href="css/theme.css" />
+<link rel="stylesheet" href="css/components.css" />
+<link rel="stylesheet" href="css/animations.css" />
+<link rel="stylesheet" href="css/game.css" />
+</head>
+<body>
+
+<!-- ============================================================= -->
+<!-- SVG SPRITE — all icon + collectible artwork (no emoji art)     -->
+<!-- ============================================================= -->
+<svg class="svg-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad-gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFE9A8"/><stop offset="0.5" stop-color="#FFC857"/><stop offset="1" stop-color="#F97316"/>
+    </linearGradient>
+    <linearGradient id="grad-flame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFF8EC"/><stop offset="0.35" stop-color="#FFC857"/><stop offset="1" stop-color="#F97316"/>
+    </linearGradient>
+    <linearGradient id="grad-clay" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#D98250"/><stop offset="1" stop-color="#8A4428"/>
+    </linearGradient>
+    <linearGradient id="grad-magenta" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F0A6D8"/><stop offset="1" stop-color="#D946A6"/>
+    </linearGradient>
+    <linearGradient id="grad-teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8CF0E2"/><stop offset="1" stop-color="#39C6B0"/>
+    </linearGradient>
+    <linearGradient id="grad-purple" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#C79BFF"/><stop offset="1" stop-color="#9B5DE5"/>
+    </linearGradient>
+    <linearGradient id="grad-dark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4A2A73"/><stop offset="1" stop-color="#170D2B"/>
+    </linearGradient>
+    <radialGradient id="grad-glow"><stop offset="0" stop-color="#FFC857" stop-opacity="0.85"/><stop offset="1" stop-color="#FFC857" stop-opacity="0"/></radialGradient>
+  </defs>
+
+  <!-- UI icons -->
+  <symbol id="i-sound-on" viewBox="0 0 24 24"><path d="M4 9.5h3.2L12 5.4v13.2L7.2 14.5H4z" fill="currentColor"/><path d="M15.6 8.8a4.6 4.6 0 0 1 0 6.4M18.2 6.2a8.2 8.2 0 0 1 0 11.6" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></symbol>
+  <symbol id="i-sound-off" viewBox="0 0 24 24"><path d="M4 9.5h3.2L12 5.4v13.2L7.2 14.5H4z" fill="currentColor"/><path d="M16 9.5l5 5m0-5l-5 5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" fill="none"/></symbol>
+  <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 17.5a2.5 2.5 0 1 1-2.5-2.5c.6 0 1.1.2 1.5.5V5l10-2v11.5a2.5 2.5 0 1 1-2.5-2.5c.6 0 1.1.2 1.5.5V7.2L9 8.8z" fill="currentColor"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><path d="M12 15.3a3.3 3.3 0 1 0 0-6.6 3.3 3.3 0 0 0 0 6.6z" stroke="currentColor" stroke-width="1.7" fill="none"/><path d="M19.4 13.5a1.6 1.6 0 0 0 .33 1.76l.06.06a1.95 1.95 0 1 1-2.76 2.76l-.06-.06a1.6 1.6 0 0 0-1.76-.33 1.6 1.6 0 0 0-.97 1.46V19a1.95 1.95 0 0 1-3.9 0v-.1a1.6 1.6 0 0 0-1.05-1.46 1.6 1.6 0 0 0-1.76.33l-.06.06A1.95 1.95 0 1 1 4.7 15.1l.06-.06a1.6 1.6 0 0 0 .33-1.76 1.6 1.6 0 0 0-1.46-.97H3.5a1.95 1.95 0 0 1 0-3.9h.1a1.6 1.6 0 0 0 1.46-1.05 1.6 1.6 0 0 0-.33-1.76L4.67 5.5A1.95 1.95 0 1 1 7.43 2.74l.06.06a1.6 1.6 0 0 0 1.76.33H9.3a1.6 1.6 0 0 0 .97-1.46V1.5a1.95 1.95 0 0 1 3.9 0v.1a1.6 1.6 0 0 0 .97 1.46 1.6 1.6 0 0 0 1.76-.33l.06-.06a1.95 1.95 0 1 1 2.76 2.76l-.06.06a1.6 1.6 0 0 0-.33 1.76v.08a1.6 1.6 0 0 0 1.46.97h.11a1.95 1.95 0 0 1 0 3.9h-.1a1.6 1.6 0 0 0-1.46.97z" stroke="currentColor" stroke-width="1.5" fill="none" transform="translate(0 2.2) scale(0.96)"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.8v14.4L19.5 12z" fill="currentColor"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6.5" y="5" width="4" height="14" rx="1.4" fill="currentColor"/><rect x="13.5" y="5" width="4" height="14" rx="1.4" fill="currentColor"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7" fill="none"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.4 2.33c-.7.27-1 .85-1 1.57v.4" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round"/><circle cx="12" cy="16.6" r="1.1" fill="currentColor"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M14.5 5.5L8 12l6.5 6.5" stroke="currentColor" stroke-width="2.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><circle cx="17.5" cy="5.8" r="2.8" fill="currentColor"/><circle cx="6.2" cy="12" r="2.8" fill="currentColor"/><circle cx="17.5" cy="18.2" r="2.8" fill="currentColor"/><path d="M8.7 10.7l6.2-3.4M8.7 13.3l6.2 3.4" stroke="currentColor" stroke-width="1.7"/></symbol>
+  <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M12.04 2C6.6 2 2.2 6.4 2.2 11.84c0 1.94.52 3.76 1.44 5.33L2 22.5l5.46-1.6a9.8 9.8 0 0 0 4.58 1.14h.01c5.43 0 9.84-4.4 9.84-9.84C21.89 6.4 17.47 2 12.04 2zm5.72 13.9c-.24.68-1.42 1.32-1.95 1.37-.5.05-1.13.07-1.83-.11a16.5 16.5 0 0 1-1.66-.62c-2.92-1.26-4.83-4.2-4.98-4.4-.14-.2-1.19-1.58-1.19-3.02 0-1.43.75-2.14 1.02-2.43.27-.3.59-.37.78-.37.2 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.82 2 .89 2.15.07.14.12.31.02.5-.1.2-.15.32-.29.49-.15.17-.31.38-.44.51-.15.14-.3.3-.13.59.17.3.76 1.25 1.63 2.02 1.12 1 2.06 1.3 2.36 1.45.3.15.47.12.64-.07.17-.2.74-.86.94-1.16.2-.3.39-.25.66-.15.27.1 1.69.8 1.98.94.3.15.49.22.56.34.07.12.07.69-.17 1.37z" fill="currentColor"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11" height="11" rx="2.4" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M15.5 5.6A2.1 2.1 0 0 0 13.4 4H6.6A2.6 2.6 0 0 0 4 6.6v6.8c0 1 .66 1.78 1.6 2.06" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3.6v11m0 0l4.2-4.2M12 14.6l-4.2-4.2" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 16.4v1.9a2.2 2.2 0 0 0 2.2 2.2h10.6a2.2 2.2 0 0 0 2.2-2.2v-1.9" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.6l4.6 4.6L19 7.4" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9.5" rx="2.4" fill="currentColor" opacity=".85"/><path d="M8.2 10.5V8a3.8 3.8 0 0 1 7.6 0v2.5" stroke="currentColor" stroke-width="1.9" fill="none"/></symbol>
+  <symbol id="i-restart" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M20.4 3.6v4.8h-4.8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-motion" viewBox="0 0 24 24"><path d="M3 12h4l2.5-6 4 13 2.5-7H21" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+
+  <!-- Trophy -->
+  <symbol id="i-trophy" viewBox="0 0 48 48">
+    <path d="M12 7h24v9a12 12 0 0 1-24 0z" fill="url(#grad-gold)"/>
+    <path d="M12 10H8.5a4.5 4.5 0 0 0 0 9H13M36 10h3.5a4.5 4.5 0 0 1 0 9H35" stroke="#FFC857" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <path d="M21 28h6v6h-6z" fill="#F97316"/>
+    <path d="M14 40c0-3.3 2.7-6 6-6h8c3.3 0 6 2.7 6 6z" fill="url(#grad-gold)"/>
+    <path d="M24 12.5l2.1 4.3 4.7.7-3.4 3.3.8 4.7-4.2-2.2-4.2 2.2.8-4.7-3.4-3.3 4.7-.7z" fill="#FFF8EC" opacity=".75"/>
+  </symbol>
+
+  <!-- Diya icon -->
+  <symbol id="i-diya" viewBox="0 0 48 48">
+    <ellipse cx="24" cy="39" rx="16" ry="4.5" fill="#000" opacity=".25"/>
+    <path d="M7 29c0 6 7.6 9 17 9s17-3 17-9z" fill="url(#grad-clay)"/>
+    <ellipse cx="24" cy="29" rx="17" ry="5.5" fill="#E09A66"/>
+    <ellipse cx="24" cy="29" rx="12.5" ry="3.6" fill="#7A3A22"/>
+    <path d="M24 8c4.6 5.6 7 9 7 12.6A7 7 0 0 1 17 20.6C17 17 19.4 13.6 24 8z" fill="url(#grad-flame)"/>
+    <path d="M24 14c2 2.8 3.2 4.6 3.2 6.4a3.2 3.2 0 1 1-6.4 0c0-1.8 1.2-3.6 3.2-6.4z" fill="#FFF8EC" opacity=".8"/>
+  </symbol>
+
+  <!-- Collectibles -->
+  <symbol id="c-flame" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="28" fill="url(#grad-glow)"/>
+    <path d="M32 9c9 11 14 17.5 14 24.5A14 14 0 1 1 18 33.5C18 26.5 23 20 32 9z" fill="url(#grad-flame)"/>
+    <path d="M32 24c4 5.2 6 8 6 10.8a6 6 0 1 1-12 0c0-2.8 2-5.6 6-10.8z" fill="#FFF8EC"/>
+  </symbol>
+  <symbol id="c-rangoli" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="27" fill="#2A1548"/>
+    <g>
+      <circle cx="32" cy="32" r="25" fill="none" stroke="#FFC857" stroke-width="1.6" stroke-dasharray="3 4"/>
+      <g fill="url(#grad-magenta)"><ellipse cx="32" cy="12.5" rx="4.6" ry="8"/><ellipse cx="32" cy="51.5" rx="4.6" ry="8"/><ellipse cx="12.5" cy="32" rx="8" ry="4.6"/><ellipse cx="51.5" cy="32" rx="8" ry="4.6"/></g>
+      <g fill="url(#grad-teal)" transform="rotate(45 32 32)"><ellipse cx="32" cy="15" rx="4" ry="7"/><ellipse cx="32" cy="49" rx="4" ry="7"/><ellipse cx="15" cy="32" rx="7" ry="4"/><ellipse cx="49" cy="32" rx="7" ry="4"/></g>
+      <circle cx="32" cy="32" r="8.5" fill="url(#grad-purple)"/>
+      <circle cx="32" cy="32" r="4" fill="url(#grad-gold)"/>
+    </g>
+  </symbol>
+  <symbol id="c-spark" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="26" fill="url(#grad-glow)" opacity=".7"/>
+    <g stroke="url(#grad-gold)" stroke-width="3" stroke-linecap="round">
+      <path d="M32 6v13M32 45v13M6 32h13M45 32h13M13.6 13.6l9 9M41.4 41.4l9 9M50.4 13.6l-9 9M22.6 41.4l-9 9"/>
+    </g>
+    <circle cx="32" cy="32" r="8" fill="#FFF8EC"/>
+    <circle cx="32" cy="32" r="12.5" fill="none" stroke="#D946A6" stroke-width="2.2" stroke-dasharray="2 5"/>
+  </symbol>
+  <symbol id="c-mithai" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="26" fill="url(#grad-glow)" opacity=".55"/>
+    <circle cx="32" cy="34" r="17" fill="url(#grad-gold)"/>
+    <g fill="#FFF8EC" opacity=".55"><circle cx="26" cy="28" r="2.4"/><circle cx="37" cy="31" r="2"/><circle cx="30" cy="39" r="2.2"/><circle cx="39" cy="40" r="1.8"/></g>
+    <path d="M24 18c3-3 13-3 16 0" stroke="#D946A6" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="32" cy="15" r="3.6" fill="#39C6B0"/>
+  </symbol>
+
+  <!-- Achievement badges -->
+  <symbol id="a-firstlight" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#2A1548"/><path d="M24 10c5 6 7.5 9.4 7.5 13a7.5 7.5 0 0 1-15 0c0-3.6 2.5-7 7.5-13z" fill="url(#grad-flame)"/><ellipse cx="24" cy="34" rx="11" ry="3.4" fill="url(#grad-clay)"/></symbol>
+  <symbol id="a-pattern" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#2A1548"/><g fill="url(#grad-magenta)"><ellipse cx="24" cy="12" rx="3.4" ry="6"/><ellipse cx="24" cy="36" rx="3.4" ry="6"/><ellipse cx="12" cy="24" rx="6" ry="3.4"/><ellipse cx="36" cy="24" rx="6" ry="3.4"/></g><circle cx="24" cy="24" r="6" fill="url(#grad-gold)"/></symbol>
+  <symbol id="a-sky" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#2A1548"/><g stroke="url(#grad-teal)" stroke-width="2.6" stroke-linecap="round"><path d="M24 8v9M24 31v9M8 24h9M31 24h9M12.7 12.7l6.4 6.4M28.9 28.9l6.4 6.4M35.3 12.7l-6.4 6.4M19.1 28.9l-6.4 6.4"/></g><circle cx="24" cy="24" r="5" fill="url(#grad-gold)"/></symbol>
+  <symbol id="a-mithai" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#2A1548"/><circle cx="19" cy="26" r="8" fill="url(#grad-gold)"/><rect x="26" y="18" width="13" height="13" rx="2.6" fill="url(#grad-teal)" transform="rotate(12 32 24)"/><circle cx="24" cy="14" r="3.4" fill="url(#grad-magenta)"/></symbol>
+  <symbol id="a-darkness" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#2A1548"/><path d="M11 28c0-7 5.8-12 13-12s13 5 13 12c0 4-2 6-5 6-2 0-3-1-4 0s-2 3-4 3-3-2-4-3-2 0-4 0c-3 0-5-2-5-6z" fill="url(#grad-dark)" stroke="#9B5DE5" stroke-width="1.6"/><circle cx="19" cy="25" r="2.4" fill="#FFC857"/><circle cx="29" cy="25" r="2.4" fill="#FFC857"/><path d="M30 11l3.6 7.4L41 22l-7.4 3.6" stroke="#FFC857" stroke-width="1.6" fill="none" opacity=".5"/></symbol>
+  <symbol id="a-combo" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#2A1548"/><path d="M26 7L13 27h8l-3 14 17-21h-9z" fill="url(#grad-gold)"/></symbol>
+  <symbol id="a-festival" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#2A1548"/><path d="M24 7l4.3 8.8 9.7 1.4-7 6.9 1.6 9.7-8.6-4.6-8.6 4.6 1.6-9.7-7-6.9 9.7-1.4z" fill="url(#grad-gold)"/><circle cx="24" cy="22" r="4" fill="#170D2B"/></symbol>
+  <symbol id="a-legend" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="#2A1548"/><path d="M12 10h24v7a12 12 0 0 1-24 0z" fill="url(#grad-gold)"/><path d="M21 28h6v5h-6z" fill="#F97316"/><path d="M14 39c0-3 2.4-5.4 5.4-5.4h9.2c3 0 5.4 2.4 5.4 5.4z" fill="url(#grad-gold)"/></symbol>
+
+  <!-- Power-up icons (boss) -->
+  <symbol id="p-flame" viewBox="0 0 32 32"><path d="M16 4c5 6 7.6 9.4 7.6 13A7.6 7.6 0 0 1 8.4 17C8.4 13.4 11 10 16 4z" fill="url(#grad-flame)"/></symbol>
+  <symbol id="p-shield" viewBox="0 0 32 32"><path d="M16 3l11 4v9c0 6.6-4.6 11.2-11 13C9.6 27.2 5 22.6 5 16V7z" fill="url(#grad-teal)"/><path d="M11 16.4l3.6 3.6L22 12.6" stroke="#0E3B35" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="p-stun" viewBox="0 0 32 32"><path d="M18 2L7 18h7l-2 12 13-17h-8z" fill="url(#grad-gold)"/></symbol>
+  <symbol id="p-heart" viewBox="0 0 32 32"><path d="M16 28S4 20.6 4 12.6A6.6 6.6 0 0 1 16 8.8 6.6 6.6 0 0 1 28 12.6C28 20.6 16 28 16 28z" fill="url(#grad-magenta)"/></symbol>
+</svg>
+
+<!-- ============================================================= -->
+<div id="app" class="app">
+  <div class="frame" id="frame">
+    <canvas id="ambient-canvas" class="ambient-canvas" aria-hidden="true"></canvas>
+    <div class="frame__vignette" aria-hidden="true"></div>
+
+    <main id="screens" class="screens">
+
+      <!-- ===================== SPLASH ===================== -->
+      <section class="screen screen--splash" data-screen="splash" aria-label="Intro">
+        <div class="splash__sky" aria-hidden="true">
+          <div class="splash__city"></div>
+        </div>
+        <div class="splash__diyas" aria-hidden="true">
+          <span class="sd sd--1"><svg viewBox="0 0 48 48"><use href="#i-diya"/></svg></span>
+          <span class="sd sd--2"><svg viewBox="0 0 48 48"><use href="#i-diya"/></svg></span>
+          <span class="sd sd--3"><svg viewBox="0 0 48 48"><use href="#i-diya"/></svg></span>
+        </div>
+        <div class="splash__logo">
+          <div class="logo logo--xl">
+            <span class="logo__mark" aria-hidden="true">
+              <svg viewBox="0 0 48 48"><use href="#i-diya"/></svg>
+            </span>
+            <span class="logo__text">
+              <span class="logo__title">DIWALI <em>DHAMAKA</em></span>
+              <span class="logo__sub">THE FESTIVAL QUEST</span>
+            </span>
+          </div>
+          <p class="splash__tagline">Restore the Lights. Unlock the Magic.<br/>Become the Diwali Champion!</p>
+        </div>
+        <button class="splash__skip" type="button" data-action="skip-splash">SKIP <span aria-hidden="true">›</span></button>
+      </section>
+
+      <!-- ===================== HOME ===================== -->
+      <section class="screen screen--home" data-screen="home" aria-label="Home">
+        <header class="topbar">
+          <div class="logo logo--sm">
+            <span class="logo__mark" aria-hidden="true"><svg viewBox="0 0 48 48"><use href="#i-diya"/></svg></span>
+            <span class="logo__text">
+              <span class="logo__title">DIWALI <em>DHAMAKA</em></span>
+              <span class="logo__sub">THE FESTIVAL QUEST</span>
+            </span>
+          </div>
+          <div class="topbar__actions">
+            <button class="icon-btn" type="button" data-action="toggle-sound" aria-pressed="true" aria-label="Toggle sound">
+              <svg class="ic-on" viewBox="0 0 24 24"><use href="#i-sound-on"/></svg>
+              <svg class="ic-off" viewBox="0 0 24 24"><use href="#i-sound-off"/></svg>
+            </button>
+            <button class="icon-btn" type="button" data-action="open-settings" aria-label="Settings">
+              <svg viewBox="0 0 24 24"><use href="#i-settings"/></svg>
+            </button>
+          </div>
+        </header>
+
+        <div class="home__scroll">
+          <!-- Challenge banner (populated only when a challenge link is opened) -->
+          <div class="challenge-banner" id="challenge-banner" hidden>
+            <span class="challenge-banner__glow" aria-hidden="true"></span>
+            <svg class="challenge-banner__icon" viewBox="0 0 48 48" aria-hidden="true"><use href="#i-trophy"/></svg>
+            <div class="challenge-banner__body">
+              <p class="challenge-banner__title" id="challenge-title">A FRIEND CHALLENGES YOU!</p>
+              <p class="challenge-banner__sub">Can you beat <b id="challenge-score">0</b>?</p>
+            </div>
+          </div>
+
+          <!-- Hero scene -->
+          <div class="hero" id="hero">
+            <div class="hero__scene">
+              <svg class="city" viewBox="0 0 400 220" preserveAspectRatio="xMidYMax meet" aria-label="The magical city of Diwalipur">
+                <defs>
+                  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#2B1550"/><stop offset="0.65" stop-color="#3C1B66"/><stop offset="1" stop-color="#541F6E"/>
+                  </linearGradient>
+                  <linearGradient id="bldgFar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3A1C63"/><stop offset="1" stop-color="#26113F"/></linearGradient>
+                  <linearGradient id="bldgNear" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A1247"/><stop offset="1" stop-color="#190C2C"/></linearGradient>
+                  <radialGradient id="moon"><stop offset="0" stop-color="#FFF8EC"/><stop offset="0.55" stop-color="#FFE3A8"/><stop offset="1" stop-color="#FFC857" stop-opacity="0"/></radialGradient>
+                  <radialGradient id="warmGlow"><stop offset="0" stop-color="#FFC857" stop-opacity=".55"/><stop offset="1" stop-color="#FFC857" stop-opacity="0"/></radialGradient>
+                </defs>
+                <rect width="400" height="220" fill="url(#sky)"/>
+                <circle cx="318" cy="46" r="46" fill="url(#moon)" opacity=".55"/>
+                <circle cx="318" cy="46" r="17" fill="#FFF3D0" opacity=".9"/>
+                <g class="city__stars" fill="#FFF8EC">
+                  <circle cx="40" cy="30" r="1.3" opacity=".8"/><circle cx="95" cy="54" r="1" opacity=".55"/><circle cx="150" cy="24" r="1.2" opacity=".7"/>
+                  <circle cx="215" cy="42" r="1" opacity=".5"/><circle cx="265" cy="22" r="1.4" opacity=".75"/><circle cx="360" cy="80" r="1" opacity=".5"/>
+                  <circle cx="22" cy="78" r="1" opacity=".45"/><circle cx="123" cy="90" r="1" opacity=".4"/>
+                </g>
+                <!-- far skyline -->
+                <g fill="url(#bldgFar)">
+                  <path d="M0 150h40v70H0z"/><path d="M44 132h30v88H44z"/><path d="M78 160h26v60H78z"/>
+                  <path d="M108 120h34v100h-34z"/><path d="M146 146h28v74h-28z"/><path d="M178 128h36v92h-36z"/>
+                  <path d="M218 152h30v68h-30z"/><path d="M252 118h32v102h-32z"/><path d="M288 148h28v72h-28z"/>
+                  <path d="M320 134h34v86h-34z"/><path d="M358 156h42v64h-42z"/>
+                </g>
+                <!-- domes -->
+                <g fill="url(#bldgFar)">
+                  <path d="M108 120c0-12 8-20 17-20s17 8 17 20z"/>
+                  <path d="M252 118c0-14 7-22 16-22s16 8 16 22z"/>
+                  <path d="M320 134c0-10 8-17 17-17s17 7 17 17z"/>
+                </g>
+                <g stroke="#FFC857" stroke-width="1.6" opacity=".85">
+                  <path d="M125 100v-9M268 96v-10M337 117v-8"/>
+                </g>
+                <!-- windows -->
+                <g class="city__windows" fill="#FFC857">
+                  <rect x="12" y="162" width="5" height="7" rx="1"/><rect x="24" y="162" width="5" height="7" rx="1"/>
+                  <rect x="52" y="146" width="5" height="7" rx="1"/><rect x="62" y="146" width="5" height="7" rx="1"/><rect x="52" y="162" width="5" height="7" rx="1"/>
+                  <rect x="86" y="172" width="5" height="7" rx="1"/><rect x="116" y="138" width="6" height="8" rx="1"/><rect x="128" y="138" width="6" height="8" rx="1"/>
+                  <rect x="116" y="158" width="6" height="8" rx="1"/><rect x="128" y="158" width="6" height="8" rx="1"/>
+                  <rect x="154" y="160" width="5" height="7" rx="1"/><rect x="164" y="160" width="5" height="7" rx="1"/>
+                  <rect x="186" y="144" width="6" height="8" rx="1"/><rect x="198" y="144" width="6" height="8" rx="1"/><rect x="186" y="166" width="6" height="8" rx="1"/>
+                  <rect x="226" y="166" width="5" height="7" rx="1"/><rect x="236" y="166" width="5" height="7" rx="1"/>
+                  <rect x="260" y="136" width="6" height="8" rx="1"/><rect x="272" y="136" width="6" height="8" rx="1"/><rect x="260" y="158" width="6" height="8" rx="1"/><rect x="272" y="158" width="6" height="8" rx="1"/>
+                  <rect x="296" y="162" width="5" height="7" rx="1"/><rect x="306" y="162" width="5" height="7" rx="1"/>
+                  <rect x="328" y="150" width="6" height="8" rx="1"/><rect x="340" y="150" width="6" height="8" rx="1"/>
+                  <rect x="366" y="170" width="5" height="7" rx="1"/><rect x="378" y="170" width="5" height="7" rx="1"/>
+                </g>
+                <!-- string lights -->
+                <g class="city__string" fill="none" stroke="#FFC857" stroke-opacity=".35" stroke-width="1">
+                  <path d="M0 112q100 34 200 2t200 18"/>
+                </g>
+                <g class="city__bulbs" fill="#FF9F43">
+                  <circle cx="40" cy="124" r="2"/><circle cx="90" cy="130" r="2"/><circle cx="140" cy="127" r="2"/><circle cx="190" cy="116" r="2"/>
+                  <circle cx="240" cy="118" r="2"/><circle cx="290" cy="124" r="2"/><circle cx="340" cy="128" r="2"/>
+                </g>
+                <!-- near rooftops -->
+                <g fill="url(#bldgNear)">
+                  <path d="M0 186h58v34H0z"/><path d="M64 176h48v44H64z"/><path d="M120 190h62v30h-62z"/>
+                  <path d="M190 178h54v42h-54z"/><path d="M250 192h58v28h-58z"/><path d="M314 180h86v40h-86z"/>
+                </g>
+                <circle cx="200" cy="200" r="90" fill="url(#warmGlow)"/>
+              </svg>
+
+              <!-- Foreground animated diyas -->
+              <div class="hero__diyas" aria-hidden="true">
+                <span class="hd hd--1"><svg viewBox="0 0 48 48"><use href="#i-diya"/></svg></span>
+                <span class="hd hd--2"><svg viewBox="0 0 48 48"><use href="#i-diya"/></svg></span>
+                <span class="hd hd--3"><svg viewBox="0 0 48 48"><use href="#i-diya"/></svg></span>
+                <span class="hd hd--4"><svg viewBox="0 0 48 48"><use href="#i-diya"/></svg></span>
+              </div>
+              <div class="hero__coins" aria-hidden="true">
+                <span class="coin coin--1"></span><span class="coin coin--2"></span><span class="coin coin--3"></span>
+              </div>
+            </div>
+
+            <div class="hero__copy">
+              <h1 class="headline">THE CITY NEEDS<br/><span class="headline__accent">YOUR LIGHT!</span></h1>
+              <p class="subcopy">Complete five festive challenges and restore the magic of Diwalipur.</p>
+            </div>
+          </div>
+
+          <div class="home__cta">
+            <button class="btn btn--primary btn--xl" type="button" data-action="play">
+              <span class="btn__sweep" aria-hidden="true"></span>
+              <span class="btn__label">PLAY NOW</span>
+            </button>
+            <button class="btn btn--ghost" type="button" data-action="howto">
+              <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-help"/></svg>
+              HOW TO PLAY
+            </button>
+          </div>
+
+          <!-- Record card -->
+          <div class="record-card" id="record-card">
+            <div class="record-card__trophy"><svg viewBox="0 0 48 48" aria-hidden="true"><use href="#i-trophy"/></svg></div>
+            <div class="record-card__body">
+              <p class="record-card__label">DIWALI CHAMPION <span class="pill" id="record-scope">THIS DEVICE</span></p>
+              <p class="record-card__name" id="record-name">No champion yet</p>
+            </div>
+            <div class="record-card__score">
+              <span class="num" id="record-score">0</span>
+              <span class="unit">PTS</span>
+            </div>
+          </div>
+
+          <!-- Player stats -->
+          <div class="stat-row">
+            <div class="stat">
+              <span class="stat__k">YOUR BEST</span>
+              <span class="stat__v" id="stat-best">0</span>
+            </div>
+            <div class="stat">
+              <span class="stat__k">ACHIEVEMENTS</span>
+              <span class="stat__v"><span id="stat-ach">0</span><em>/8</em></span>
+            </div>
+            <div class="stat">
+              <span class="stat__k">GUARDIAN LV</span>
+              <span class="stat__v" id="stat-level">1</span>
+            </div>
+          </div>
+          <div class="xp-strip">
+            <div class="xp-strip__bar"><i id="xp-fill" style="width:0%"></i></div>
+            <span class="xp-strip__text" id="xp-text">0 XP</span>
+          </div>
+
+          <button class="link-btn" type="button" data-action="open-achievements">View achievement collection</button>
+          <p class="footnote">Five stages · 90 seconds · No login, no install.</p>
+        </div>
+      </section>
+
+      <!-- ===================== HOW TO PLAY ===================== -->
+      <section class="screen screen--sheet" data-screen="howto" aria-label="How to play">
+        <header class="sheet__head">
+          <button class="icon-btn" type="button" data-action="back-home" aria-label="Back"><svg viewBox="0 0 24 24"><use href="#i-back"/></svg></button>
+          <h2 class="sheet__title">HOW TO PLAY</h2>
+          <span class="sheet__spacer"></span>
+        </header>
+        <div class="sheet__scroll">
+          <p class="sheet__intro">Darkness has swallowed Diwalipur. Clear five quick challenges — about 90 seconds in total — and bring the festival back to life.</p>
+          <ol class="howto-list">
+            <li class="howto-card">
+              <span class="howto-card__n">1</span>
+              <div class="howto-card__ic hc-1"><svg viewBox="0 0 48 48"><use href="#i-diya"/></svg></div>
+              <div>
+                <h3>LIGHT RUSH</h3>
+                <p><b>Tap</b> every unlit diya before it fades. Golden diyas are worth more. Avoid the dark wisps.</p>
+                <p class="howto-card__score">Diya +10 · Golden +25 · Wisp −15</p>
+              </div>
+            </li>
+            <li class="howto-card">
+              <span class="howto-card__n">2</span>
+              <div class="howto-card__ic hc-2"><svg viewBox="0 0 64 64"><use href="#c-rangoli"/></svg></div>
+              <div>
+                <h3>RANGOLI RUSH</h3>
+                <p>Look at the pattern on top, then <b>pick the tile that matches it exactly</b>. Four rounds, the last one is a speed bonus.</p>
+                <p class="howto-card__score">Match +100 · Streak bonus</p>
+              </div>
+            </li>
+            <li class="howto-card">
+              <span class="howto-card__n">3</span>
+              <div class="howto-card__ic hc-3"><svg viewBox="0 0 64 64"><use href="#c-spark"/></svg></div>
+              <div>
+                <h3>FIREWORK FRENZY</h3>
+                <p><b>Tap rockets</b> as they climb the sky. Golden ones pay double. Never tap the dark duds.</p>
+                <p class="howto-card__score">Rocket +20 · Golden +50 · Dud −20</p>
+              </div>
+            </li>
+            <li class="howto-card">
+              <span class="howto-card__n">4</span>
+              <div class="howto-card__ic hc-4"><svg viewBox="0 0 64 64"><use href="#c-mithai"/></svg></div>
+              <div>
+                <h3>MITHAI MANIA</h3>
+                <p><b>Drag</b> (or use ← →) to move the basket and catch falling sweets. Dodge the empty boxes.</p>
+                <p class="howto-card__score">Laddoo +10 · Jalebi +15 · Barfi +20 · Golden +50</p>
+              </div>
+            </li>
+            <li class="howto-card">
+              <span class="howto-card__n">5</span>
+              <div class="howto-card__ic hc-5"><svg viewBox="0 0 48 48"><use href="#a-darkness"/></svg></div>
+              <div>
+                <h3>DEFEAT THE DARKNESS</h3>
+                <p><b>Tap the glowing weak points</b>, drag your lamp away from falling dark energy, and fire the power-ups you collected in stages 1–4.</p>
+                <p class="howto-card__score">Weak point · Golden core · Final strike</p>
+              </div>
+            </li>
+          </ol>
+          <div class="combo-explainer">
+            <h3>COMBO MULTIPLIER</h3>
+            <p>Chain successful hits without a mistake to multiply every point you score.</p>
+            <div class="combo-explainer__row">
+              <span class="chip">3 hits <b>×1.5</b></span><span class="chip">5 hits <b>×2</b></span><span class="chip">10 hits <b>×3</b></span>
+            </div>
+          </div>
+          <button class="btn btn--primary btn--block" type="button" data-action="play"><span class="btn__sweep" aria-hidden="true"></span><span class="btn__label">GOT IT — LET'S PLAY</span></button>
+        </div>
+      </section>
+
+      <!-- ===================== ACHIEVEMENTS ===================== -->
+      <section class="screen screen--sheet" data-screen="achievements" aria-label="Achievements">
+        <header class="sheet__head">
+          <button class="icon-btn" type="button" data-action="back-home" aria-label="Back"><svg viewBox="0 0 24 24"><use href="#i-back"/></svg></button>
+          <h2 class="sheet__title">ACHIEVEMENTS</h2>
+          <span class="sheet__spacer"></span>
+        </header>
+        <div class="sheet__scroll">
+          <p class="sheet__intro">Unlocked by real gameplay — and saved on this device.</p>
+          <div class="ach-grid" id="ach-grid"></div>
+        </div>
+      </section>
+
+      <!-- ===================== STAGE INTRO ===================== -->
+      <section class="screen screen--stage-intro" data-screen="stage-intro" aria-label="Stage introduction">
+        <div class="stage-intro">
+          <p class="stage-intro__num" id="si-num">STAGE 1 OF 5</p>
+          <div class="stage-intro__icon" id="si-icon"></div>
+          <h2 class="stage-intro__name" id="si-name">LIGHT RUSH</h2>
+          <p class="stage-intro__mission"><span class="stage-intro__missionlabel">MISSION</span><span id="si-mission">Light 15 diyas!</span></p>
+          <p class="stage-intro__hint" id="si-hint">Tap the diyas to light them</p>
+          <div class="stage-intro__bar"><i id="si-bar"></i></div>
+          <button class="btn btn--primary btn--block" type="button" data-action="begin-stage"><span class="btn__sweep" aria-hidden="true"></span><span class="btn__label">START</span></button>
+        </div>
+      </section>
+
+      <!-- ===================== GAMEPLAY ===================== -->
+      <section class="screen screen--play" data-screen="play" aria-label="Gameplay">
+        <header class="hud" id="hud">
+          <div class="hud__top">
+            <div class="hud__stage">
+              <span class="hud__stagenum" id="hud-stagenum">STAGE 1</span>
+              <span class="hud__stagename" id="hud-stagename">LIGHT RUSH</span>
+            </div>
+            <div class="hud__score">
+              <span class="hud__scorenum" id="hud-score">0</span>
+              <span class="hud__scorelabel">SCORE</span>
+            </div>
+            <button class="icon-btn icon-btn--sm" type="button" data-action="pause" aria-label="Pause"><svg viewBox="0 0 24 24"><use href="#i-pause"/></svg></button>
+          </div>
+          <div class="hud__timer"><i id="hud-timerbar"></i><span id="hud-timertext">15.0</span></div>
+          <div class="hud__bottom">
+            <div class="hud__mission" role="status" aria-live="polite" aria-atomic="true">
+              <span class="hud__missionlabel" id="hud-missionlabel">Light 15 diyas</span>
+              <span class="hud__missionval"><b id="hud-missionnow">0</b>/<span id="hud-missiongoal">15</span></span>
+            </div>
+            <div class="hud__combo" id="hud-combo" data-level="0">
+              <span class="hud__combox" id="hud-combox">×1</span>
+              <span class="hud__combotag" id="hud-combotag"></span>
+            </div>
+          </div>
+        </header>
+
+        <div class="stage-area" id="stage-area">
+          <canvas id="game-canvas" class="game-canvas"></canvas>
+          <div class="dom-layer" id="dom-layer"></div>
+          <div class="stage-flash" id="stage-flash" aria-hidden="true"></div>
+        </div>
+
+        <footer class="powerbar" id="powerbar" hidden></footer>
+
+        <div class="pause-overlay" id="pause-overlay" hidden>
+          <div class="pause-card">
+            <h2>PAUSED</h2>
+            <button class="btn btn--primary btn--block" type="button" data-action="resume"><span class="btn__label">RESUME</span></button>
+            <button class="btn btn--ghost btn--block" type="button" data-action="restart-run">RESTART RUN</button>
+            <button class="btn btn--ghost btn--block" type="button" data-action="quit-run">QUIT TO HOME</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== STAGE COMPLETE ===================== -->
+      <section class="screen screen--result" data-screen="stage-complete" aria-label="Stage complete">
+        <div class="result-card">
+          <p class="result-card__eyebrow" id="sc-eyebrow">STAGE 1 CLEARED</p>
+          <h2 class="result-card__title" id="sc-title">COURTYARD GLOWING!</h2>
+          <div class="collectible-reveal" id="sc-collectible">
+            <span class="collectible-reveal__burst" aria-hidden="true"></span>
+            <svg class="collectible-reveal__art" viewBox="0 0 64 64"><use id="sc-collectible-use" href="#c-flame"/></svg>
+          </div>
+          <p class="collectible-reveal__name" id="sc-collectible-name">GOLDEN FLAME</p>
+          <p class="collectible-reveal__desc" id="sc-collectible-desc">Deals bonus damage in the boss battle.</p>
+          <ul class="mini-stats">
+            <li><span>STAGE SCORE</span><b id="sc-score">0</b></li>
+            <li><span>MISSION</span><b id="sc-mission">0/15</b></li>
+            <li><span>BEST COMBO</span><b id="sc-combo">×1</b></li>
+            <li><span>XP EARNED</span><b id="sc-xp">+0</b></li>
+          </ul>
+          <button class="btn btn--primary btn--block" type="button" data-action="next-stage"><span class="btn__sweep" aria-hidden="true"></span><span class="btn__label">CONTINUE</span></button>
+        </div>
+      </section>
+
+      <!-- ===================== DEFEAT ===================== -->
+      <section class="screen screen--result" data-screen="defeat" aria-label="Try again">
+        <div class="result-card result-card--defeat">
+          <div class="defeat__art" aria-hidden="true"><svg viewBox="0 0 48 48"><use href="#a-darkness"/></svg></div>
+          <p class="result-card__eyebrow">THE DARKNESS HOLDS…</p>
+          <h2 class="result-card__title">SO CLOSE, GUARDIAN!</h2>
+          <p class="result-card__text">You weakened it to <b id="df-hp">40%</b>. Your score is safe — take one more shot at the monster.</p>
+          <button class="btn btn--primary btn--block" type="button" data-action="retry-boss"><span class="btn__sweep" aria-hidden="true"></span><span class="btn__label">FIGHT AGAIN</span></button>
+          <button class="btn btn--ghost btn--block" type="button" data-action="skip-to-results">SEE MY RESULTS</button>
+        </div>
+      </section>
+
+      <!-- ===================== VICTORY CINEMATIC ===================== -->
+      <section class="screen screen--victory" data-screen="victory" aria-label="Victory">
+        <canvas id="victory-canvas" class="victory-canvas" aria-hidden="true"></canvas>
+        <div class="victory__content">
+          <div class="victory__trophy"><svg viewBox="0 0 48 48"><use href="#i-trophy"/></svg></div>
+          <h2 class="victory__title">YOU RESTORED<br/>THE MAGIC!</h2>
+          <p class="victory__sub">Diwalipur is shining again, Festival Guardian.</p>
+          <button class="btn btn--primary btn--block" type="button" data-action="to-results"><span class="btn__sweep" aria-hidden="true"></span><span class="btn__label">SEE MY RESULTS</span></button>
+        </div>
+      </section>
+
+      <!-- ===================== RESULTS ===================== -->
+      <section class="screen screen--sheet screen--results" data-screen="results" aria-label="Results">
+        <div class="sheet__scroll" id="results-scroll">
+          <div class="results__hero">
+            <p class="results__eyebrow" id="res-eyebrow">FESTIVAL QUEST COMPLETE</p>
+            <div class="title-badge" id="res-title-badge">
+              <svg class="title-badge__ic" viewBox="0 0 48 48" aria-hidden="true"><use id="res-title-icon" href="#a-legend"/></svg>
+              <span class="title-badge__text" id="res-title">DIWALI LEGEND</span>
+            </div>
+            <p class="results__scorelabel">FINAL SCORE</p>
+            <p class="results__score" id="res-score">0</p>
+            <div class="newrec-flag" id="res-newrec" hidden>NEW HIGH SCORE!</div>
+          </div>
+
+          <ul class="mini-stats mini-stats--grid">
+            <li><span>XP EARNED</span><b id="res-xp">+0</b></li>
+            <li><span>STAGES</span><b id="res-stages">5/5</b></li>
+            <li><span>BEST COMBO</span><b id="res-combo">×1</b></li>
+            <li><span>BOSS</span><b id="res-boss">—</b></li>
+          </ul>
+
+          <div class="panel">
+            <h3 class="panel__title">COLLECTION</h3>
+            <div class="collect-row" id="res-collectibles"></div>
+          </div>
+
+          <div class="panel" id="res-ach-panel">
+            <h3 class="panel__title">ACHIEVEMENTS UNLOCKED</h3>
+            <div class="ach-row" id="res-achievements"></div>
+          </div>
+
+          <div class="panel panel--stages">
+            <h3 class="panel__title">STAGE BREAKDOWN</h3>
+            <ul class="stage-break" id="res-breakdown"></ul>
+          </div>
+
+          <div class="results__actions">
+            <button class="btn btn--primary btn--block" type="button" data-action="play-again"><span class="btn__sweep" aria-hidden="true"></span><span class="btn__label">PLAY AGAIN</span></button>
+            <button class="btn btn--whatsapp btn--block" type="button" data-action="challenge-friends">
+              <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-whatsapp"/></svg>
+              CHALLENGE FRIENDS
+            </button>
+            <button class="btn btn--ghost btn--block" type="button" data-action="share-score">
+              <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-share"/></svg>
+              SHARE MY SCORE
+            </button>
+            <button class="link-btn" type="button" data-action="back-home">Back to home</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== NAME ENTRY ===================== -->
+      <section class="screen screen--result" data-screen="name-entry" aria-label="New high score">
+        <div class="result-card result-card--record">
+          <div class="record-burst" aria-hidden="true"></div>
+          <div class="namecap__trophy"><svg viewBox="0 0 48 48"><use href="#i-trophy"/></svg></div>
+          <p class="result-card__eyebrow newrec-eyebrow">NEW HIGH SCORE</p>
+          <h2 class="result-card__title">YOU'RE THE NEW<br/>DIWALI CHAMPION!</h2>
+          <p class="namecap__score"><b id="ne-score">0</b> <span>PTS</span></p>
+          <p class="namecap__prev" id="ne-prev"></p>
+          <form id="name-form" class="namecap__form" autocomplete="off">
+            <label class="namecap__label" for="player-name">Enter your name</label>
+            <input class="input" id="player-name" name="player-name" type="text" maxlength="18" placeholder="Your name" inputmode="text" autocomplete="off" spellcheck="false" required />
+            <p class="namecap__hint">Only your name and score are saved. Nothing else.</p>
+            <button class="btn btn--primary btn--block" type="submit"><span class="btn__sweep" aria-hidden="true"></span><span class="btn__label">CLAIM MY RECORD</span></button>
+          </form>
+          <button class="link-btn" type="button" data-action="skip-name">Skip</button>
+        </div>
+      </section>
+
+      <!-- ===================== SHARE ===================== -->
+      <section class="screen screen--sheet" data-screen="share" aria-label="Share your score">
+        <header class="sheet__head">
+          <button class="icon-btn" type="button" data-action="back-results" aria-label="Back"><svg viewBox="0 0 24 24"><use href="#i-back"/></svg></button>
+          <h2 class="sheet__title">CHALLENGE FRIENDS</h2>
+          <span class="sheet__spacer"></span>
+        </header>
+        <div class="sheet__scroll">
+          <div class="share-card-wrap">
+            <canvas id="share-canvas" class="share-card" width="1080" height="1350" aria-label="Your shareable score card"></canvas>
+          </div>
+          <div class="share-msg">
+            <p class="share-msg__label">YOUR CHALLENGE MESSAGE</p>
+            <p class="share-msg__text" id="share-text">…</p>
+          </div>
+          <div class="share-actions">
+            <button class="btn btn--whatsapp btn--block" type="button" data-action="share-whatsapp">
+              <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-whatsapp"/></svg>
+              SHARE ON WHATSAPP
+            </button>
+            <button class="btn btn--primary btn--block" type="button" data-action="share-native" id="btn-native-share">
+              <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-share"/></svg>
+              <span class="btn__label">SHARE CARD + LINK</span>
+            </button>
+            <div class="share-actions__row">
+              <button class="btn btn--ghost" type="button" data-action="share-copy">
+                <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-copy"/></svg>
+                COPY
+              </button>
+              <button class="btn btn--ghost" type="button" data-action="share-download">
+                <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg>
+                SAVE CARD
+              </button>
+            </div>
+          </div>
+          <p class="footnote" id="share-url-note"></p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ===================== SETTINGS MODAL ===================== -->
+    <div class="modal" id="settings-modal" hidden>
+      <div class="modal__backdrop" data-action="close-settings"></div>
+      <div class="modal__card" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+        <header class="modal__head">
+          <h2 id="settings-title">SETTINGS</h2>
+          <button class="icon-btn" type="button" data-action="close-settings" aria-label="Close settings"><svg viewBox="0 0 24 24"><use href="#i-close"/></svg></button>
+        </header>
+        <ul class="toggle-list">
+          <li>
+            <span class="toggle-list__ic"><svg viewBox="0 0 24 24"><use href="#i-music"/></svg></span>
+            <span class="toggle-list__label">Music<em>Festive instrumental loop</em></span>
+            <button class="switch" type="button" role="switch" aria-checked="true" data-toggle="music" aria-label="Music"><i></i></button>
+          </li>
+          <li>
+            <span class="toggle-list__ic"><svg viewBox="0 0 24 24"><use href="#i-sound-on"/></svg></span>
+            <span class="toggle-list__label">Sound effects<em>Taps, sparks and fanfare</em></span>
+            <button class="switch" type="button" role="switch" aria-checked="true" data-toggle="sfx" aria-label="Sound effects"><i></i></button>
+          </li>
+          <li>
+            <span class="toggle-list__ic"><svg viewBox="0 0 24 24"><use href="#i-motion"/></svg></span>
+            <span class="toggle-list__label">Reduced motion<em>Fewer particles, no screen shake</em></span>
+            <button class="switch" type="button" role="switch" aria-checked="false" data-toggle="reducedMotion" aria-label="Reduced motion"><i></i></button>
+          </li>
+        </ul>
+        <div class="modal__foot">
+          <button class="btn btn--ghost btn--block" type="button" data-action="reset-data">RESET LOCAL RECORD &amp; PROGRESS</button>
+          <p class="footnote" id="storage-note"></p>
+          <p class="footnote footnote--version">Diwali Dhamaka <span id="app-version">v1.0.0</span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toasts + achievement popups -->
+    <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="false"></div>
+    <div class="ach-pop-stack" id="ach-pop-stack" aria-live="polite"></div>
+    <div class="screen-wipe" id="screen-wipe" aria-hidden="true"></div>
+  </div>
+</div>
+
+<noscript>
+  <div style="padding:2rem;color:#FFF8EC;font-family:system-ui,sans-serif">Diwali Dhamaka needs JavaScript enabled to run. Please turn it on and reload.</div>
+</noscript>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

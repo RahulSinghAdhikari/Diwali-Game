@@ -1,0 +1,200 @@
+/* =========================================================
+   THEME — design tokens, typography scale, surfaces
+   ========================================================= */
+
+:root {
+  /* Backgrounds */
+  --bg-midnight: #170D2B;
+  --bg-deep: #24123F;
+  --bg-royal: #35165C;
+  --bg-abyss: #0C0617;
+
+  /* Primary accents */
+  --gold: #FFC857;
+  --marigold: #FF9F43;
+  --saffron: #F97316;
+
+  /* Secondary accents */
+  --magenta: #D946A6;
+  --violet: #9B5DE5;
+  --teal: #39C6B0;
+
+  /* Text */
+  --ink: #FFF8EC;
+  --ink-muted: #B9A9CF;
+  --ink-dim: rgba(185, 169, 207, .62);
+
+  /* Surfaces */
+  --surface-1: rgba(53, 22, 92, .55);
+  --surface-2: rgba(36, 18, 63, .82);
+  --surface-3: rgba(23, 13, 43, .92);
+  --stroke-soft: rgba(185, 169, 207, .16);
+  --stroke-gold: rgba(255, 200, 87, .34);
+
+  /* Effects */
+  --glow-gold: 0 0 28px rgba(255, 200, 87, .45);
+  --glow-violet: 0 0 34px rgba(155, 93, 229, .5);
+  --glow-magenta: 0 0 30px rgba(217, 70, 166, .45);
+  --shadow-card: 0 18px 40px -18px rgba(0, 0, 0, .85);
+
+  /* Motion */
+  --t-screen: 380ms;
+  --t-screen-out: 260ms;
+  --t-fast: 140ms;
+  --t-med: 240ms;
+  --ease-out: cubic-bezier(.22, .68, .32, 1);
+  --ease-in: cubic-bezier(.55, .06, .68, .19);
+  --ease-spring: cubic-bezier(.3, 1.5, .5, 1);
+
+  /* Layout */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+
+  --font-display: 'Outfit', 'Trebuchet MS', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ------------------------- Typography ------------------------- */
+
+.headline,
+.sheet__title,
+.result-card__title,
+.victory__title,
+.stage-intro__name,
+.logo__title,
+.panel__title,
+.results__score,
+.hud__scorenum,
+.num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.num,
+.results__score,
+.hud__scorenum,
+.record-card__score .num,
+.stat__v,
+.mini-stats b {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+.headline {
+  font-size: clamp(26px, 7.6vw, 36px);
+  line-height: 1.04;
+  text-transform: uppercase;
+  font-weight: 900;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, .5);
+}
+.headline__accent {
+  background: linear-gradient(94deg, #FFE9A8 0%, var(--gold) 38%, var(--saffron) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 22px rgba(255, 159, 67, .38));
+}
+
+.subcopy {
+  color: var(--ink-muted);
+  font-size: 14.5px;
+  line-height: 1.5;
+  max-width: 34ch;
+}
+
+.footnote {
+  color: var(--ink-dim);
+  font-size: 11.5px;
+  text-align: center;
+  margin-top: 14px;
+  letter-spacing: .02em;
+}
+
+/* ------------------------- Logo ------------------------- */
+
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo__mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  filter: drop-shadow(0 0 12px rgba(255, 200, 87, .55));
+}
+.logo__mark svg { width: 100%; height: 100%; }
+.logo__text { display: flex; flex-direction: column; line-height: 1; }
+.logo__title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  letter-spacing: .02em;
+  color: var(--ink);
+}
+.logo__title em {
+  font-style: normal;
+  background: linear-gradient(96deg, #FFE9A8, var(--gold) 45%, var(--saffron));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.logo__sub {
+  font-family: var(--font-body);
+  color: var(--ink-muted);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+}
+
+.logo--sm .logo__mark { width: 30px; height: 30px; }
+.logo--sm .logo__title { font-size: 15px; }
+.logo--sm .logo__sub { font-size: 7.5px; margin-top: 3px; }
+
+.logo--xl { flex-direction: column; gap: 14px; text-align: center; }
+.logo--xl .logo__mark { width: 74px; height: 74px; }
+.logo--xl .logo__title { font-size: clamp(32px, 10vw, 44px); letter-spacing: .01em; }
+.logo--xl .logo__sub { font-size: 11px; letter-spacing: .44em; margin-top: 8px; }
+
+/* ------------------------- Shared surfaces ------------------------- */
+
+.panel {
+  background: var(--surface-2);
+  border: 1px solid var(--stroke-soft);
+  border-radius: var(--radius-lg);
+  padding: 16px 14px;
+  margin-top: 14px;
+  box-shadow: var(--shadow-card);
+}
+.panel__title {
+  font-size: 12px;
+  letter-spacing: .18em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.pill {
+  display: inline-block;
+  font-size: 8.5px;
+  letter-spacing: .14em;
+  padding: 2px 7px;
+  border-radius: 99px;
+  border: 1px solid var(--stroke-gold);
+  color: var(--gold);
+  background: rgba(255, 200, 87, .1);
+  vertical-align: middle;
+  margin-left: 6px;
+  font-weight: 700;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 7px 11px;
+  border-radius: 99px;
+  background: rgba(155, 93, 229, .16);
+  border: 1px solid rgba(155, 93, 229, .34);
+  color: var(--ink);
+}
+.chip b { color: var(--gold); font-weight: 700; }

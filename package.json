@@ -1,0 +1,27 @@
+{
+  "name": "diwali-dhamaka",
+  "version": "1.0.0",
+  "description": "Diwali Dhamaka \u2014 The Festival Quest: a mobile-first HTML5 arcade game.",
+  "scripts": {
+    "start": "python3 -m http.server 8080",
+    "serve": "python3 -m http.server 8080",
+    "test": "node tests/logic.test.mjs && node tests/game.test.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RahulSinghAdhikari/Diwali-Game.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RahulSinghAdhikari/Diwali-Game/issues"
+  },
+  "homepage": "https://github.com/RahulSinghAdhikari/Diwali-Game#readme",
+  "dependencies": {
+    "jsdom": "^31.0.0"
+  },
+  "private": true,
+  "type": "module",
+  "devDependencies": {}
+}
