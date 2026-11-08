@@ -5,7 +5,8 @@
   "scripts": {
     "start": "python3 tools/dev-server.py 8080",
     "serve": "python3 tools/dev-server.py 8080",
-    "test": "node tests/logic.test.mjs && node tests/game.test.mjs"
+    "test": "node tests/logic.test.mjs && node tests/game.test.mjs && node tests/standalone.test.mjs",
+    "build:standalone": "node tools/build-standalone.mjs"
   },
   "repository": {
     "type": "git",
@@ -23,5 +24,7 @@
   },
   "private": true,
   "type": "module",
-  "devDependencies": {}
+  "devDependencies": {
+    "esbuild": "^0.28.2"
+  }
 }

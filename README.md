@@ -189,6 +189,17 @@ Opening it shows a **"RAHUL SINGH CHALLENGES YOU! Can you beat 2,450?"** banner 
 npm start                        # http://localhost:8080
 ```
 
+### No server? Use the single-file build
+
+```bash
+npm run build:standalone         # writes play-offline.html
+```
+
+`play-offline.html` is the entire game — every stylesheet and the whole module
+graph inlined into one ~295 KB file with **zero external requests**. Double-click it,
+e-mail it, put it on a USB stick; it plays offline with no server at all. (Web fonts are
+dropped in this build, so it renders with the system font stack.)
+
 That runs [`tools/dev-server.py`](tools/dev-server.py) — a ~90-line static server with three
 things `python3 -m http.server` gets wrong for a 30-module ES project:
 
@@ -379,8 +390,10 @@ Diwali-Game/
 │       ├── firework-frenzy.js
 │       ├── mithai-mania.js
 │       └── boss-battle.js
+├── play-offline.html       # Single-file build — open it directly, no server
 ├── tools/
-│   └── dev-server.py       # Local static server (keep-alive, no-store) — dev only
+│   ├── dev-server.py       # Local static server (keep-alive, no-store) — dev only
+│   └── build-standalone.mjs# Inlines everything into play-offline.html
 └── tests/
     ├── harness.mjs         # jsdom + virtual clock + canvas/audio stubs
     ├── logic.test.mjs      # Pure logic (records, combos, patterns, sharing)
@@ -429,11 +442,13 @@ npm test
 ```
 
 ```
-tests/logic.test.mjs   32 passed    record rules A–D, combos, XP, achievements,
-                                     pattern generation, share/challenge URLs
-tests/game.test.mjs    36 passed    full five-stage run, boss win and loss, retry,
-                                     record capture, results, sharing, pause,
-                                     keyboard play, reduced motion, a11y labels
+tests/logic.test.mjs     32 passed  record rules A–D, combos, XP, achievements,
+                                   pattern generation, share/challenge URLs
+tests/game.test.mjs      36 passed  full five-stage run, boss win and loss, retry,
+                                   record capture, results, sharing, pause,
+                                   keyboard play, reduced motion, a11y labels
+tests/standalone.test.mjs 5 passed  the single-file build boots from disk with no
+                                   network and reaches a playable stage
 ```
 
 Every test asserts that nothing was written to `console.error` during the run.
