@@ -682,7 +682,8 @@
     <svg class="boot-error__ic" viewBox="0 0 48 48" aria-hidden="true"><use href="#i-diya"/></svg>
     <h2 class="boot-error__title" id="boot-error-title">The festival could not start</h2>
     <pre class="boot-error__detail" id="boot-error-detail"></pre>
-    <button class="btn btn--primary" type="button" onclick="location.reload()">RELOAD</button>
+    <a class="btn btn--primary btn--block" id="boot-error-alt" href="play-offline.html" hidden>PLAY THE OFFLINE VERSION</a>
+    <button class="btn btn--ghost btn--block" type="button" onclick="location.reload()">RELOAD</button>
   </div>
 </div>
 
@@ -705,6 +706,28 @@
     document.getElementById('boot-error-detail').textContent = detail || '';
     box.hidden = false;
   }
+
+  // Opened by double-clicking instead of over http:// — ES modules cannot load
+  // from a file:// origin, so say so now rather than after a blank 8 seconds.
+  // Only applies to this modular page: the single-file build inlines its script
+  // and is *designed* to be opened from disk, so it must never show this.
+  function checkProtocol() {
+    if (location.protocol !== 'file:') return;
+    if (!document.querySelector('script[type="module"][src]')) return;
+    show('Open the game over http://, not from your file system',
+      'Browsers block JavaScript modules on file:// for security, so this page ' +
+      'cannot start this way.\n\n' +
+      'Easiest fix: open play-offline.html instead — it is the whole game in a ' +
+      'single file and runs straight from disk.\n\n' +
+      'Or serve this folder and open http://localhost:8080 :\n' +
+      '    python3 tools/dev-server.py 8080\n' +
+      '    (or: npm start)');
+    var alt = document.getElementById('boot-error-alt');
+    if (alt) alt.hidden = false;
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkProtocol);
+  } else { checkProtocol(); }
 
   window.addEventListener('error', function (e) {
     var msg = e.message || 'Script error';

@@ -36,16 +36,42 @@ No framework. No build step. No bundler. Open it on a phone and play.
 
 ## Play it
 
+### The absolute simplest way — no installs, no terminal
+
+1. Download **`play-offline.html`** from this repo
+   ([direct link](https://github.com/RahulSinghAdhikari/Diwali-Game/raw/arena/c579d3ba-diwali-game/play-offline.html) —
+   right-click → *Save link as…*)
+2. **Double-click the downloaded file.**
+
+That's it. It is the entire game — all CSS and JavaScript inlined into one file with zero
+external requests — so it runs straight from your hard drive, offline, on any modern browser.
+
+### Running the real project (the modular source)
+
+**Windows:** double-click **`start-windows.bat`**
+**macOS / Linux:** run **`./start.sh`**
+
+Either one serves the folder and opens <http://localhost:8080> for you. If you prefer to
+do it yourself:
+
 ```bash
 git clone https://github.com/RahulSinghAdhikari/Diwali-Game.git
 cd Diwali-Game
-npm start                        # python3 tools/dev-server.py 8080
+python3 tools/dev-server.py 8080      # or: npm start
 ```
 
 Then open <http://localhost:8080>.
 
-> ES modules need an HTTP origin. Opening `index.html` straight from the file system
-> (`file://`) will not work — any static server will.
+> ### ⚠️ Do not double-click `index.html`
+>
+> It will show a black screen. Browsers refuse to load JavaScript modules from a
+> `file://` address for security reasons — this is a browser rule, not a bug in the game.
+> `index.html` now detects this and tells you so, with a button through to the offline
+> build. Use a server (above) or use `play-offline.html`.
+
+### No Python and no Node?
+
+Use `play-offline.html`. It needs nothing at all.
 
 ---
 
@@ -397,6 +423,8 @@ Diwali-Game/
 │       ├── mithai-mania.js
 │       └── boss-battle.js
 ├── play-offline.html       # Single-file build — open it directly, no server
+├── start.sh                # One-command launcher (macOS/Linux)
+├── start-windows.bat       # One-click launcher (Windows)
 ├── tools/
 │   ├── dev-server.py       # Local static server (keep-alive, no-store) — dev only
 │   └── build-standalone.mjs# Inlines everything into play-offline.html

@@ -86,6 +86,8 @@ describe('Single-file build (play-offline.html)', () => {
     equal(/src="js\//.test(src), false, 'no external script');
     equal(/fonts\.(googleapis|gstatic)\.com/.test(src), false, 'no font CDN call');
     assert(src.includes('DIWALI <em>DHAMAKA</em>'), 'wordmark present');
+    equal(/<script[^>]*type="module"/.test(src), false, 'classic script only — modules are unreliable on file://');
+    assert(/var \$\$ = \(sel, root = document\)/.test(src), 'the $$ helper survived bundling');
   });
 
   it('boots from the file system with no network', async () => {
@@ -102,13 +104,8 @@ describe('Single-file build (play-offline.html)', () => {
     const origError = window.console.error;
     window.console.error = (...a) => { errors.push(a.map(String).join(' ')); origError(...a); };
 
-    // jsdom cannot execute inline <script type="module">, so run the inlined
-    // bundle by hand once parsing is done — which is exactly the deferred
-    // timing a browser gives a module script.
-    const moduleTag = [...window.document.querySelectorAll('script[type="module"]')].pop();
-    assert(moduleTag && moduleTag.textContent.length > 100000, 'the bundle is inlined in the page');
-    window.eval(moduleTag.textContent);
-
+    // The build emits a classic script, so jsdom runs it exactly as a browser
+    // opening the file from disk would — no manual evaluation needed.
     await new Promise((r) => setTimeout(r, 1500));
     assert(window.DiwaliDhamaka, 'the game announced itself on window');
   });
@@ -132,6 +129,36 @@ describe('Single-file build (play-offline.html)', () => {
 
   it('booted without console errors', () => {
     equal(errors.length, 0, `errors: ${errors.join(' | ')}`);
+    dom.window.close();
+  });
+});
+
+describe('index.html opened the wrong way', () => {
+  it('warns clearly on file:// instead of showing a black screen', async () => {
+    const dom = new JSDOM(fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8'), {
+      url: 'file:///home/user/Diwali-Game/index.html',
+      runScripts: 'dangerously',
+      beforeParse: stub
+    });
+    await new Promise((r) => setTimeout(r, 300));
+    const doc = dom.window.document;
+    equal(doc.getElementById('boot-error').hidden, false, 'the explanation is visible');
+    const title = doc.getElementById('boot-error-title').textContent;
+    assert(/http/i.test(title), `title should mention http: ${title}`);
+    const detail = doc.getElementById('boot-error-detail').textContent;
+    assert(detail.includes('play-offline.html'), 'points at the offline build');
+    equal(doc.getElementById('boot-error-alt').hidden, false, 'offers a one-click way out');
+    dom.window.close();
+  });
+
+  it('stays silent when served over http', async () => {
+    const dom = new JSDOM(fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8'), {
+      url: 'http://localhost:8080/',
+      runScripts: 'dangerously',
+      beforeParse: stub
+    });
+    await new Promise((r) => setTimeout(r, 300));
+    equal(dom.window.document.getElementById('boot-error').hidden, true, 'no warning over http');
     dom.window.close();
   });
 });

@@ -35,11 +35,11 @@ for (const [, href] of cssLinks) css += `/* ${href} */\n${await read(href)}\n`;
 const bundle = await build({
   entryPoints: [path.join(ROOT, 'js/app.js')],
   bundle: true,
-  // ESM, not IIFE: the inlined tag stays <script type="module"> so it keeps the
-  // deferred execution the game relies on (a classic script would run mid-parse,
-  // before the DOM it queries exists). Inline modules need no network, so this
-  // still works straight from the file system.
-  format: 'esm',
+  // IIFE + a classic <script> tag, NOT a module. Browsers treat a file://
+  // document as an opaque origin, and module semantics there are inconsistent
+  // across browsers; a classic script always runs. The DOM-ready wrapper added
+  // below restores the deferred timing that `type="module"` gave us.
+  format: 'iife',
   platform: 'browser',
   target: ['es2020'],
   write: false,
@@ -64,22 +64,29 @@ cssLinks.forEach(([tag], i) => {
 // Fonts need the network; offline we fall back to the system stack.
 out = out.replace(/<link[^>]+fonts\.(googleapis|gstatic)\.com[^>]*>\s*/g, () => '');
 
+const wrapped =
+  `(function () {\n` +
+  `  function boot() {\n${escapeForScript(js)}\n  }\n` +
+  `  if (document.readyState === 'loading') {\n` +
+  `    document.addEventListener('DOMContentLoaded', boot);\n` +
+  `  } else { boot(); }\n` +
+  `})();`;
+
 out = sub(
   out,
   /<script type="module" src="js\/app\.js"><\/script>/,
-  `<script type="module">\n${escapeForScript(js)}\n</script>`
+  `<script>\n${wrapped}\n</script>`
 );
 
 if (/<link[^>]+href="css\//.test(out)) throw new Error('a stylesheet was left external');
 if (out.includes('src="js/')) throw new Error('a script was left external');
 
-// The inlined bundle must be byte-identical to what esbuild produced.
-const embedded = out.slice(out.indexOf('<script type="module">') + '<script type="module">\n'.length,
-  out.lastIndexOf('\n</script>'));
-if (embedded !== escapeForScript(js)) throw new Error('the bundle was altered while inlining');
-for (const helper of ['querySelectorAll']) {
-  if (!embedded.includes(helper)) throw new Error(`bundle lost ${helper} — replacement corrupted it`);
+// The inlined bundle must survive the stitching byte for byte.
+if (!out.includes(escapeForScript(js))) throw new Error('the bundle was altered while inlining');
+if (!/var \$\$ = \(sel, root = document\)/.test(out)) {
+  throw new Error('the $$ helper was corrupted — check for string-replacement $-expansion');
 }
+if (/<script[^>]*type="module"/.test(out)) throw new Error('offline build must not use a module script');
 
 await fs.writeFile(OUT, out, 'utf8');
 
